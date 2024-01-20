@@ -1,0 +1,27 @@
+ll
+ls -la ../jatin
+ls -a ../jet
+ls -a ../jet
+su -u
+su -u jatin
+su jatin
+pwd
+su jatin
+su jatin
+su jatin
+su jatin
+su jatin
+su jatin
+su jatin
+su jatin
+su jatin
+su jatin
+su jatin
+su jatin
+/opt/homebrew/bin/tmux -c `which zsh` -vv
+/opt/homebrew/bin/tmux -c `which zsh`
+/opt/homebrew/bin/tmux -c `which zsh` -vv
+ll
+cd
+pwd
+ls Downloads

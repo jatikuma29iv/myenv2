@@ -1,0 +1,116 @@
+# ~/.profile: executed by the command interpreter for login shells.
+# This file is not read by bash(1), if ~/.bash_profile or ~/.bash_login
+# exists.
+# see /usr/share/doc/bash/examples/startup-files for examples.
+# the files are located in the bash-doc package.
+
+# the default umask is set in /etc/profile; for setting the umask
+# for ssh logins, install and configure the libpam-umask package.
+#umask 022
+
+# jet - add tmux
+JET_TMUX=/opt/homebrew/bin/tmux
+# *** replaced tmux -> JET_TMUX in Mac
+if command -v $JET_TMUX &> /dev/null && [ -n "$PS1" ] && [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ $JET_TMUX ]] && [ -z "$TMUX" ]; then
+  exec $JET_TMUX -vv
+fi
+
+# if running bash
+if [ -n "$BASH_VERSION" ]; then
+    # include .bashrc if it exists
+    if [ -f "$HOME/.bashrc" ]; then
+	. "$HOME/.bashrc"
+    fi
+fi
+
+# making rvm available
+[[ -s /usr/local/rvm/scripts/rvm ]] && source /usr/local/rvm/scripts/rvm &> /dev/null
+
+# setting ruby version to 2.6
+rvm use 2.6 &> /dev/null
+
+# set PATH so it includes user's private bin if it exists
+if [ -d "$HOME/bin" ] ; then
+    PATH="$HOME/bin:$PATH"
+fi
+
+# set PATH so it includes user's private bin if it exists
+if [ -d "$HOME/.local/bin" ] ; then
+    PATH="$HOME/.local/bin:$PATH"
+fi
+
+# Jet
+export PATH=$PATH:/usr/local/bin
+export REACT_EDITOR=vim
+export FZF_DEFAULT_OPTS='--ansi --border --preview "bat --color=always --style=numbers --line-range=:500 {}"'
+
+# rg
+#if [ -x "$(command -v rg)" ] ; then
+#    FZF_DEFAULT_COMMAND='rg --files --hidden --glob "!.git/*" --glob "!node_modules/*"'
+#    FZF_DEFAULT_COMMAND='rg --files --hidden --glob "!.git/*"'
+#    FZF_CTRL_T_COMMAND='$FZF_DEFAULT_COMMAND'
+#fi
+
+# gcloud
+CLOUDSDK_HOME=/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk
+
+countdn() { local i=$1; while [ "$i" -gt "0" ]; do printf "\r repeating after $i sec"; i=`expr $i - 1`; sleep 1; done; echo . }
+
+
+# # change k8s profile
+# function chk8shome() {
+#   local H=/home/jet/k8s/$1;
+#
+#   [ ! -e $H ] && echo " invalid k8s home '$1'" && return 1;
+#
+#   cd $H;
+#   export HOME=$H;
+#   export "J_HOME= \[\e[0;45m\]$1$SEGMENT_SEPARATOR%{$reset_color%}"
+#   export PATH=`echo $PATH | perl -pe "s|/home/.*?/bin:|${H}/bin:|"`;
+#   export KUBECONFIG=$H/.kube/config
+#   #func not working
+#   #export PS1=$(get_jhome $1 $PS1)
+#   export PS1="<$1>$PS1"
+# }
+
+[ -f $HOME/.myscripts ] && source $HOME/.myscripts/*
+
+# add alias colorls
+alias ls='colorls --color=always'
+alias lr='ls -ltr'
+
+alias cless="/usr/local/bin/ccat --color='always' | less -R"
+
+alias sl="tmux neww 'kubectl logs -f -n stress-bighit-14 -lapp=api' \; rename-window 'stress-14' \; split-window -h 'kubectl logs -f -n stress-bighit-14 -lapp=cms' \; split-window -h 'kubectl logs -f -n stress-bighit-14 -lapp=jobserver' \; select-layout even-horizontal"
+alias ql="tmux neww 'kubectl logs -f -n qa-bighit-14 -lapp=api' \; rename-window 'qa-14' \; split-window -h 'kubectl logs -f -n qa-bighit-14 -lapp=cms' \; split-window -h 'kubectl logs -f -n qa-bighit-14 -lapp=jobserver' \; select-layout even-horizontal"
+alias pl="tmux neww 'kubectl logs -f -n bighit-14 -lapp=api' \; rename-window 'prod-14' \; split-window -h 'kubectl logs -f -n bighit-14 -lapp=cms' \; split-window -h 'kubectl logs -f -n bighit-14 -lapp=jobserver' \; select-layout even-horizontal"
+
+# alias to change folder
+c() {
+  case "$1" in
+    2m )
+      cd ~/work/v2/bighit_mobile_app
+      ;;
+    2w )
+      cd ~/work/v2/bighit_webapi/
+      ;;
+    m )
+      cd ~/work/bighit_mobile_app
+      ;;
+    w )
+      cd ~/work/bighit_webapi-jobserver/webapi/
+      ;;
+    aw )
+      cd ~/work/bighit_webapi
+      ;;
+    pm )
+      cd ~/play/tmp/bighit_mobile_app
+      ;;
+    pw )
+      cd ~/play/tmp/bighit_webapi
+      ;;
+    *)
+      echo some thing else $1
+      ;;
+  esac
+}
